@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.WeiboResultMapper">
+
+    <!--查找用户名-->
+    <select id="findAll" resultType="com.example.pojo.WeiboResult">
+        SELECT *
+        FROM result
+        ORDER BY prediction DESC LIMIT 15;
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.BlogPostMapper">
+
+    <select id="getMediaNonMediaPostCount" resultType="com.example.pojo.MediaNonMediaPostCountResult">
+        SELECT
+            SUM(CASE WHEN image_urls IS NOT NULL AND image_urls != '' OR video_urls IS NOT NULL AND video_urls != '' THEN 1 ELSE 0 END) AS mediaPostCount,
+            SUM(CASE WHEN (image_urls IS NULL OR image_urls = '') AND (video_urls IS NULL OR video_urls = '') THEN 1 ELSE 0 END) AS noMediaPostCount
+        FROM
+            blog
+    </select>
+
+    <select id ="getAllPostCount" resultType="com.example.pojo.MediaNonMediaPostCountResult">
+        SELECT
+            keyword,
+            COUNT(*) AS post_count
+        FROM
+            blog
+        WHERE
+            page_url IS NOT NULL
+           OR video_urls IS NOT NULL
+        GROUP BY
+            keyword
+        ORDER BY
+            post_count DESC;
+    </select>
+</mapper>

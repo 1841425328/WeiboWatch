@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.BlogMessageMapper">
+
+    <!--查找账号密码-->
+    <select id="getTopFivePopularBlogs" resultType="com.example.pojo.BlogMessage">
+        SELECT DISTINCT keyword,
+                        SUM(reposts_count) AS reposts_count,
+                        SUM(likes_count) AS likes_count,
+                        SUM(comments_count) AS comments_count,
+                        search_volume
+        FROM blog b
+        GROUP BY keyword
+        ORDER BY search_volume DESC
+            LIMIT 5;
+    </select>
+
+
+</mapper>

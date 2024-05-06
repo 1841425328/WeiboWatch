@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.SourceMapper">
+
+    <!--    查询数据来源top10-->
+    <select id="getTopSources" resultType="com.example.pojo.Source">
+        SELECT
+            source,
+            COUNT(*) AS count
+        FROM
+            blog
+        WHERE
+            source IS NOT NULL
+        GROUP BY
+            source
+        ORDER BY
+            count DESC
+            LIMIT 10;
+            </select>
+
+</mapper>

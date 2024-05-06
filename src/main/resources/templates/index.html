@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>微博热榜数据可视化分析</title>
+    <link rel="stylesheet" href="/static/icon/iconfont.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+</head>
+<body>
+<div class="container-header">
+    <ul class="nowTime">
+        <li></li>
+        <li></li>
+    </ul>
+    <div class="location">
+        <i class="icon iconfont icon-buoumaotubiao23"></i>
+        <span class="areaName"></span>
+    </div>
+    <h3>微博热榜数据可视化分析</h3>
+</div>
+<div class="container-content">
+    <div class="top">
+        <div class="count-base">
+            <div class="com-count-title">热搜博文来源统计</div>
+            <div class="com-screen-content">
+                <div id="main1" style="width:100%;height:300px;"></div>
+            </div>
+            <span class="left-top"></span>
+            <span class="right-top"></span>
+            <span class="left-bottom"></span>
+            <span class="right-bottom"></span>
+        </div>
+        <div class="count-resource q1">
+            <div class="com-count-title">博文信息统计</div>
+            <div class="com-screen-content2">
+                <ul class="use-data">
+
+                </ul>
+                <div class="com-screen-content">
+                    <div id="main2" style="margin-top:10px;width:100%;height:240px;"></div>
+                </div>
+                <span class="left-top"></span>
+                <span class="right-top"></span>
+                <span class="left-bottom"></span>
+                <span class="right-bottom"></span>
+            </div>
+        </div>
+        <div class="count-resource q2">
+            <div class="com-count-title">多媒体博文对比</div>
+            <div class="com-screen-content">
+                <ul class="data-label">
+                    <li class="active" data-type="1">多媒体/非多媒体</li>
+<!--                    <li data-type="2">多媒体博文排行</li>-->
+                </ul>
+                <ul class="use-data">
+                </ul>
+                <div id="main3" style="margin-top:10px;width:100%;height:240px;"></div>
+            </div>
+            <span class="left-top"></span>
+            <span class="right-top"></span>
+            <span class="left-bottom"></span>
+            <span class="right-bottom"></span>
+        </div>
+    </div>
+
+    <div class="mid">
+        <div class="count-share w1">
+            <div class="com-count-title">微博热搜top榜</div>
+            <div class="com-screen-content">
+                <div class="topRec_List">
+                    <dl>
+                        <dd>排行</dd>
+                        <dd>标题</dd>
+                        <dd>热度</dd>
+                    </dl>
+                    <div class="maquee">
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <span class="left-top"></span>
+            <span class="right-top"></span>
+            <span class="left-bottom"></span>
+            <span class="right-bottom"></span>
+        </div>
+
+        <div class="count-share w2">
+            <div class="com-count-title">博主TOP10</div>
+            <div class="com-screen-content">
+                <div id="main5" style="width:100%;height:300px;"></div>
+            </div>
+            <span class="left-top"></span>
+            <span class="right-top"></span>
+            <span class="left-bottom"></span>
+            <span class="right-bottom"></span>
+        </div>
+    </div>
+
+    <div class="bottom">
+
+        <div class="count-topic e1">
+            <div class="com-count-title">热搜榜单预测</div>
+            <div class="com-screen-content">
+                <div id="main6" style="width:100%;height:300px;"></div>
+            </div>
+            <span class="left-top"></span>
+            <span class="right-top"></span>
+            <span class="left-bottom"></span>
+            <span class="right-bottom"></span>
+        </div>
+
+        <div class="count-topic e2">
+            <div class="com-count-title">博文转发/评论</div>
+            <div class="com-screen-content">
+                <div id="main7" style="width:100%;height:300px;"></div>
+            </div>
+            <span class="left-top"></span>
+            <span class="right-top"></span>
+            <span class="left-bottom"></span>
+            <span class="right-bottom"></span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<script type="text/javascript">
+    //根据不同的分辨率调用不同的css和js
+    if (window.screen.width >= 1600) {
+        document.write("<link href='/static/css/test-1920.css' rel='stylesheet' type='text/css'>");
+
+        document.writeln("<script type=\"text/javascript\" src=\"../static/js/test-1920.js\"><\/script>");
+    }
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        // 定义函数来发起 Ajax 请求并更新视图
+        function fetchDataAndUpdateView() {
+            $.ajax({
+                url: '/tops',
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    console.log("成功相应");
+                    console.log(response); // 在控制台打印响应，用于验证
+                    if (response) {
+                        console.log("进入if语句");
+                        var listItems = '';
+                        // 遍历数据并添加到列表中
+                        $.each(response, function (index, item) {
+                            console.log(item.keyword); // 在控制台打印标题数据，用于验证
+                            listItems += '<li>' +
+                                '<div>' + (index + 1) + '</div>' + // 序号自动生成
+                                '<div><a href="' + item.keyword_details_link + '">' + item.keyword + '</a></div>' + // 标题可点击并跳转
+                                '<div>' + item.search_volume + '</div>' + // 热度数据
+                                '</li>';
+                        });
+                        // 将新的列表项添加到现有列表中
+                        $('.maquee ul').html(listItems);
+                    } else {
+                        console.log("未进入if语句");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // 处理请求错误
+                    console.error('Ajax 请求失败:', status, error);
+                }
+            });
+        }
+
+        // 初始加载数据
+        fetchDataAndUpdateView();
+        // 每隔两秒刷新数据
+        setInterval(fetchDataAndUpdateView, 5000);
+    });
+</script>
+
+<!--大屏-->
+<script type="text/javascript">
+    function autoScroll(obj) {
+        $(obj).find("ul").animate({
+            marginTop: "-39px"
+        }, 500, function () {
+            $(this).css({marginTop: "0px"}).find("li:first").appendTo(this);
+        })
+    }
+
+    $(function () {
+        setInterval('autoScroll(".maquee")', 2000);
+    })
+</script>
+
+<!--监听PV,UV-->
+<script>
+    function getVisitorId() {
+        var visitorId = localStorage.getItem('visitor_id');
+        if (!visitorId) {
+            visitorId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('visitor_id', visitorId);
+        }
+        return visitorId;
+    }
+
+    function trackPageView(pageUrl) {
+        var visitorId = getVisitorId();
+        var data = {
+            pageUrl: pageUrl,
+            visitorId: visitorId
+        };
+
+        // 使用 Fetch API 发送数据到后端
+        fetch('/track', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+    }
+
+    trackPageView(window.location.href);
+</script>
+
+
+
+
+<style>
+    .maquee {
+        overflow-y: auto; /* 显示纵向滚动条 */
+    }
+    .maquee ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+
+</body>
+</html>
